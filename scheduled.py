@@ -10,7 +10,7 @@ def sendMessage(slack_client, msg):
   # make the POST request through the python slack client
   updateMsg = slack_client.api_call(
     "chat.postMessage",
-    channel='#test',
+    channel='#bot-test',
     text=msg
   )
 
