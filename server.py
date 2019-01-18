@@ -40,7 +40,7 @@ def command():
     "chat.postMessage",
     channel="#" + info["channel_name"],
     text=commander.getMessage()
-
+  )
   return make_response("", 200)
 
 # Start the Flask server
