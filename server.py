@@ -3,13 +3,13 @@ import os
 from flask import Flask, request, make_response, Response
 # from tokens import SLACK_BOT_TOKEN, SLACK_VERIFICATION_TOKEN
 from slackclient import SlackClient
-from slashCommand import *
+# from slashCommand import *
 
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 slack_client = SlackClient(SLACK_BOT_TOKEN)
 app = Flask(__name__)
 
-commander = Slash("Hey there! It works.")
+# commander = Slash("Hey there! It works.")
 
 # TODO: Add checks for all responses from slack api calls
 
@@ -41,7 +41,8 @@ def command():
     channel_msg = slack_client.api_call(
       "chat.postMessage",
       channel="#" + info["channel_name"],
-      text=commander.getMessage()
+      # text=commander.getMessage()
+      text=request.form.get('text')
     )
 
     return make_response("", 200)
