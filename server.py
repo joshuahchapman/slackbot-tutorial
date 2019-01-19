@@ -28,8 +28,9 @@ def command():
 
     print(msg)
 
-    channel_id = msg['user_id'] if msg['channel_name'] == 'directmessage' else msg['channel_id']
+#    channel_id = msg['user_id'] if msg['channel_name'] == 'directmessage' else msg['channel_id']
 
+    channel_id = msg['channel_id']
     print(channel_id)
 
     # send channel a message
