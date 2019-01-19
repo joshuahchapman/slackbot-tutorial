@@ -28,7 +28,7 @@ def command():
 
     print(msg)
 
-    channel_name = msg['username'] if msg['channel_name'] == 'directmessage' else msg['channel_name']
+    channel_name = msg['user_id'] if msg['channel_name'] == 'directmessage' else msg['channel_name']
 
     # send channel a message
     channel_msg = slack_client.api_call (
