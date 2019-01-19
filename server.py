@@ -23,28 +23,18 @@ app = Flask(__name__)
 
 @app.route("/slack/test", methods=["POST"])
 def command():
-    # info = request.form
 
-    # # get uid of the user
-    # im_id = slack_client.api_call(
-    #   "im.open",
-    #   user=info["user_id"]
-    # )["channel"]["id"]
+    msg = request.form
 
-    # # send user a response via DM
-    # ownerMsg = slack_client.api_call(
-    #   "chat.postMessage",
-    #   channel=im_id,
-    #   text=commander.getMessage()
+    print(msg)
 
-    print(request.form)
+    channel_name = msg['username'] if msg['channel_name'] == 'directmessage' else msg['channel_name']
 
-    # send channel a response
-    channel_msg = slack_client.api_call(
-      "chat.postMessage",
-      channel="#" + info["channel_name"],
-      # text=commander.getMessage()
-      text=request.form.get('text')
+    # send channel a message
+    channel_msg = slack_client.api_call (
+        "chat.postMessage",
+        channel="#" + channel_name,
+        text=request.form.get('text')
     )
 
     return make_response("", 200)
