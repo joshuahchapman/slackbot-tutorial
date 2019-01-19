@@ -15,7 +15,7 @@ REGION_ENDPOINT = "/ref/region"
 CHECKLIST_ENDPOINT = "/product/checklist"
 
 
-class EbirdConn:
+class EbirdClient:
 
     """
     Utilities for interacting with the eBird APIs
