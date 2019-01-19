@@ -28,14 +28,14 @@ def command():
 
     print(msg)
 
-    channel_name = msg['user_id'] if msg['channel_name'] == 'directmessage' else "#" + msg['channel_name']
+    channel_id = msg['user_id'] if msg['channel_name'] == 'directmessage' else msg['channel_id']
 
-    print(channel_name)
+    print(channel_id)
 
     # send channel a message
     channel_msg = slack_client.api_call (
         "chat.postMessage",
-        channel="#" + channel_name,
+        channel=channel_id,
         text=request.form.get('text')
     )
 
