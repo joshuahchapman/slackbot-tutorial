@@ -23,7 +23,7 @@ app = Flask(__name__)
 
 @app.route("/slack/test", methods=["POST"])
 def command():
-    info = request.form
+    # info = request.form
 
     # # get uid of the user
     # im_id = slack_client.api_call(
@@ -36,6 +36,8 @@ def command():
     #   "chat.postMessage",
     #   channel=im_id,
     #   text=commander.getMessage()
+
+    print(request.form)
 
     # send channel a response
     channel_msg = slack_client.api_call(
