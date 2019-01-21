@@ -26,6 +26,9 @@ def validate_parameters(text):
             'These are the commands I know: ' + ", ".join(valid_commands)
 
     else:
+
+        # TO DO: Add logic for each valid command, to validate the rest of the inputs
+
         result = True
         message = 'Valid command.'
 
@@ -39,6 +42,17 @@ def command():
     print(msg)
 
     channel_id = msg['channel_id']
+
+    parms_valid, validation_message = validate_parameters(msg['text'])
+
+    if parms_valid is False:
+        # send channel a message
+        channel_msg = slack_client.api_call(
+            "chat.postMessage",
+            channel=channel_id,
+            text=validation_message
+        )
+        return make_response("", 200)
 
     msg_words = msg['text'].split()
 
