@@ -41,8 +41,12 @@ def handle_command(cmd, cmd_params):
         lat = cmd_params[0]
         long = cmd_params[1]
 
-        df = ebird_client.get_recent_observations_by_lat_long(lat, long, distance=8, days_back=3)
-        print(df)
+        # TO DO: validate coordinates?
+
+        try:
+            df = ebird_client.get_recent_observations_by_lat_long(lat, long, distance=8, days_back=3)
+        except:
+            return 'eBird returned no observations near latitude ' + lat + ', longitude ' + long
 
         return_message = ''
         for index, row in df.iterrows():
