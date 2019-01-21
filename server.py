@@ -14,6 +14,10 @@ app = Flask(__name__)
 
 # list of accepted commands
 VALID_COMMANDS = ['recent', 'recent-notable']
+RESTRICTED_COMMANDS = {
+    'recent': ['directmessage', 'bot-test'],
+    'recent-notable': ['directmessage', 'bot-test']
+}
 
 
 def parse_parameters(parameter_list):
@@ -99,9 +103,21 @@ def command():
     print(msg)
 
     channel_id = msg['channel_id']
+    channel_name = msg['channel_name']
     full_command = msg['text']
 
     params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
+
+    if cmd in RESTRICTED_COMMANDS.keys():
+        if channel_name not in RESTRICTED_COMMANDS[cmd]:
+            # send channel a message
+            channel_msg = slack_client.api_call(
+                "chat.postMessage",
+                channel=channel_id,
+                text='Sorry, command ' + cmd + ' is not allowed in this channel. ' +
+                     'Please try it in a direct message (e.g. with yourself).'
+            )
+            return make_response("", 200)
 
     if params_valid is False:
         # send channel a message
@@ -113,7 +129,7 @@ def command():
         return make_response("", 200)
 
     else:
-        return_message = handle_command(cmd, cmd_parameters)
+        return_message = handle_command(cmd, cmd_parameters, channel_id)
 
         # send channel a message
         channel_msg = slack_client.api_call(
