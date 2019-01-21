@@ -14,10 +14,6 @@ app = Flask(__name__)
 
 # list of accepted commands
 VALID_COMMANDS = ['recent', 'recent-notable']
-RESTRICTED_COMMANDS = {
-    'recent': ['directmessage', 'bot-test'],
-    'recent-notable': ['directmessage', 'bot-test']
-}
 
 
 def parse_parameters(parameter_list):
@@ -102,18 +98,8 @@ def command():
     msg = request.form
     print(msg)
 
-    channel_id = msg['channel_id']
-    channel_name = msg['channel_name']
     full_command = msg['text']
-
     params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
-
-    if cmd in RESTRICTED_COMMANDS.keys():
-        if channel_name not in RESTRICTED_COMMANDS[cmd]:
-            return make_response(
-                'Sorry, command ' + cmd + ' is not allowed in this channel. ' +
-                'Please try it in a direct message (e.g. with yourself).',
-                200)
 
     if params_valid is False:
         return make_response(validation_message, 200)
