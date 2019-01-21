@@ -1,8 +1,7 @@
 import os
 from datetime import datetime
 from threading import Thread
-import requests
-from flask import Flask, request, make_response, Response
+from flask import Flask, request, make_response
 from slackclient import SlackClient
 from ebird import EbirdClient
 
@@ -111,7 +110,7 @@ def handle_command(cmd, cmd_params, channel_id):
         return
 
 
-@app.route("/slack/test", methods=["POST"])
+@app.route("/slack/ebird", methods=["POST"])
 def command():
 
     msg = request.form
