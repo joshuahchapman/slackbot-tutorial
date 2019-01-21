@@ -1,5 +1,7 @@
 import os
 from datetime import datetime
+from threading import Thread
+import requests
 from flask import Flask, request, make_response, Response
 from slackclient import SlackClient
 from ebird import EbirdClient
@@ -32,7 +34,7 @@ def parse_parameters(parameter_list):
     return valid, validation_message, cmd, parameter_list
 
 
-def handle_command(cmd, cmd_params):
+def handle_command(cmd, cmd_params, response_url):
 
     if cmd == 'recent':
 
@@ -43,8 +45,6 @@ def handle_command(cmd, cmd_params):
 
         lat = cmd_params[0]
         long = cmd_params[1]
-
-        # TO DO: validate coordinates?
 
         df = ebird_client.get_recent_observations_by_lat_long(lat, long, distance=8, days_back=3)
 
@@ -59,7 +59,13 @@ def handle_command(cmd, cmd_params):
             return_message = return_message + '*' + row['comName'] + '*, ' + \
                 row['locName'] + ', on ' + pretty_dtm + '\n'
 
-        return return_message
+        api_params = {
+            "token": SLACK_BOT_TOKEN,
+            "text": return_message
+        }
+
+        requests.post(url=response_url, params=api_params)
+        return
 
     if cmd == 'recent-notable':
 
@@ -98,14 +104,11 @@ def command():
     full_command = msg['text']
     params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
 
-    make_response(validation_message, 200)
-
-    if params_valid is False:
-        return make_response(validation_message, 200)
-
-    else:
-        return_message = handle_command(cmd, cmd_parameters)
-        return make_response(return_message, 200)
+# Thread stuff
+    response_url = msg['response_url']
+    thread = Thread(target=handle_command, kwargs={cmd, cmd_parameters, response_url})
+    thread.start()
+    return make_response(validation_message, 200)
 
 
 # Start the Flask server
