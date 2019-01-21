@@ -45,8 +45,7 @@ def handle_command(cmd, cmd_params, channel_id):
 
         if len(cmd_params) != 2:
             return_message = 'Looks like you have the wrong number of inputs.\n' \
-                    + 'The expected format is `/slashtest recent [latitude] [longitude]`.\n' \
-                    + 'For example: `/slashtest recent 38.9403316 -74.9212611`'
+                    + 'Example of the expected format: `/ebird recent 38.9403316 -74.9212611`.'
 
         else:
             lat = cmd_params[0]
@@ -79,8 +78,7 @@ def handle_command(cmd, cmd_params, channel_id):
 
         if len(cmd_params) != 2:
             return_message = 'Looks like you have the wrong number of inputs.\n' \
-                    + 'The expected format is `/slashtest recent-notable [latitude] [longitude]`.\n' \
-                    + 'For example: `/slashtest recent-notable 38.9403316 -74.9212611`'
+                    + 'The expected format is `/ebird recent-notable 38.9403316 -74.9212611`.'
 
         else:
             lat = cmd_params[0]
