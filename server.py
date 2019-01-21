@@ -12,27 +12,43 @@ ebird_client = EbirdClient(EBIRD_TOKEN)
 app = Flask(__name__)
 
 # list of accepted commands
-valid_commands = ['recent']
+VALID_COMMANDS = ['recent']
 
 
-def validate_parameters(text):
+def parse_parameters(parameter_list):
 
-    words = text.split()
-    cmd = words.pop(0)
+    cmd = parameter_list.pop(0)
 
-    if cmd not in ['recent']:
-        result = False
-        message = 'Sorry, I don''t recognize the command ' + cmd + '. ' + \
-            'These are the commands I know: ' + ", ".join(valid_commands)
+    if cmd not in VALID_COMMANDS:
+        valid = False
+        validation_message = 'Sorry, I don''t recognize the command ' + cmd + '. ' + \
+            'These are the commands I know: ' + ", ".join(VALID_COMMANDS)
 
     else:
 
         # TO DO: Add logic for each valid command, to validate the rest of the inputs
 
-        result = True
-        message = 'Valid command.'
+        valid = True
+        validation_message = 'Valid command.'
 
-    return result, message
+    return valid, validation_message, cmd, parameter_list
+
+
+def handle_command(cmd, cmd_params):
+
+    if cmd == 'recent':
+
+        lat = cmd_params[0]
+        long = cmd_params[1]
+
+        df = ebird_client.get_recent_observations_by_lat_long(lat, long, distance=8, days_back=3)
+        print(df)
+
+        return_message = ''
+        for index, row in df.iterrows():
+            return_message = return_message + row['comName'] + ' ' + row['obsDt'] + '\n'
+
+        return return_message
 
 
 @app.route("/slack/test", methods=["POST"])
@@ -42,10 +58,11 @@ def command():
     print(msg)
 
     channel_id = msg['channel_id']
+    full_command = msg['text']
 
-    parms_valid, validation_message = validate_parameters(msg['text'])
+    params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
 
-    if parms_valid is False:
+    if params_valid is False:
         # send channel a message
         channel_msg = slack_client.api_call(
             "chat.postMessage",
@@ -54,19 +71,15 @@ def command():
         )
         return make_response("", 200)
 
-    msg_words = msg['text'].split()
+    else:
+        return_message = handle_command(cmd, cmd_parameters)
 
-    region_code = msg_words[1]
-
-    df = ebird_client.get_recent_notable_observations_for_region(region_code, days_back=3)
-    print(df)
-
-    # send channel a message
-    channel_msg = slack_client.api_call(
-        "chat.postMessage",
-        channel=channel_id,
-        text=df['comName'][0]
-    )
+        # send channel a message
+        channel_msg = slack_client.api_call(
+            "chat.postMessage",
+            channel=channel_id,
+            text=return_message
+        )
 
     return make_response("", 200)
 
