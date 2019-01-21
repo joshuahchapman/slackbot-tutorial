@@ -26,9 +26,6 @@ def parse_parameters(parameter_list):
             'These are the commands I know: ' + ", ".join(VALID_COMMANDS)
 
     else:
-
-        # TO DO: Add logic for each valid command, to validate the rest of the inputs
-
         valid = True
         validation_message = 'Valid command.'
 
@@ -100,6 +97,8 @@ def command():
 
     full_command = msg['text']
     params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
+
+    make_response(validation_message, 200)
 
     if params_valid is False:
         return make_response(validation_message, 200)
