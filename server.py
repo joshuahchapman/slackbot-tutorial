@@ -45,7 +45,7 @@ def handle_command(cmd, cmd_params):
 
         df = ebird_client.get_recent_observations_by_lat_long(lat, long, distance=8, days_back=3)
 
-        if df.empty:
+        if df.empty or 'errors' in df.columns:
             return 'eBird returned no observations near latitude ' + lat + ', longitude ' + long
 
         return_message = ''
