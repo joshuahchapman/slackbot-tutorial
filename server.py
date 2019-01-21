@@ -11,7 +11,25 @@ ebird_client = EbirdClient(EBIRD_TOKEN)
 
 app = Flask(__name__)
 
-# TODO: Add checks for all responses from slack api calls
+# list of accepted commands
+valid_commands = ['recent']
+
+
+def validate_parameters(text):
+
+    words = text.split()
+    cmd = words.pop(0)
+
+    if cmd not in ['recent']:
+        result = False
+        message = 'Sorry, I don''t recognize the command ' + cmd + '. ' + \
+            'These are the commands I know: ' + ", ".join(valid_commands)
+
+    else:
+        result = True
+        message = 'Valid command.'
+
+    return result, message
 
 
 @app.route("/slack/test", methods=["POST"])
