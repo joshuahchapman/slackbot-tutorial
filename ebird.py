@@ -76,6 +76,21 @@ class EbirdClient:
 
         return df
 
+    def get_recent_notable_observations_by_lat_long(self, latitude, longitude, distance=25,
+                                            days_back=14, max_results=0):
+
+        api_params = {"key": self.api_token, "lat": latitude, "lng": longitude,
+                      "dist": distance, "back": days_back, "cat": "species"}
+
+        if max_results != 0:
+            api_params["maxResults"] = max_results
+
+        obs = requests.get(API_ROOT + OBS_ENDPOINT + "/geo/recent/notable", params=api_params)
+        data = obs.json()
+        df = pd.DataFrame.from_dict(data)
+
+        return df
+
     def get_recent_observations_for_region_for_species(self, region_code,
                                                        species_code, days_back=14, max_results=0):
 

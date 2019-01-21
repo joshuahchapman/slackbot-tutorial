@@ -13,7 +13,7 @@ ebird_client = EbirdClient(EBIRD_TOKEN)
 app = Flask(__name__)
 
 # list of accepted commands
-VALID_COMMANDS = ['recent']
+VALID_COMMANDS = ['recent', 'recent-notable']
 
 
 def parse_parameters(parameter_list):
@@ -53,6 +53,33 @@ def handle_command(cmd, cmd_params):
 
         if df.empty or 'errors' in df.columns:
             return 'eBird returned no observations near latitude ' + lat + ', longitude ' + long
+
+        return_message = ''
+        for index, row in df.iterrows():
+            # Format the datetime nicely for display.
+            pretty_dtm = datetime.strptime(row['obsDt'], '%Y-%m-%d %H:%M').strftime(
+                '%-m/%-d at %-I:%M %p')
+            return_message = return_message + '*' + row['comName'] + '*, ' + \
+                row['locName'] + ', on ' + pretty_dtm + '\n'
+
+        return return_message
+
+    if cmd == 'recent-notable':
+
+        if len(cmd_params) != 2:
+            return 'Looks like you have the wrong number of inputs.\n' \
+                    + 'The expected format is `/slashtest recent-notable [latitude] [longitude]`.\n' \
+                    + 'For example: `/slashtest recent-notable 38.9403316 -74.9212611`'
+
+        lat = cmd_params[0]
+        long = cmd_params[1]
+
+        # TO DO: validate coordinates?
+
+        df = ebird_client.get_recent_notable_observations_by_lat_long(lat, long, distance=8, days_back=3)
+
+        if df.empty or 'errors' in df.columns:
+            return 'eBird returned no notable observations near latitude ' + lat + ', longitude ' + long
 
         return_message = ''
         for index, row in df.iterrows():
