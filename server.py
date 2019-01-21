@@ -34,7 +34,9 @@ def parse_parameters(parameter_list):
     return valid, validation_message, cmd, parameter_list
 
 
-def handle_command(cmd, cmd_params, response_url):
+def handle_command(cmd, cmd_params, channel_id, response_url):
+
+    print('Handling command...')
 
     if cmd == 'recent':
 
@@ -59,12 +61,19 @@ def handle_command(cmd, cmd_params, response_url):
             return_message = return_message + '*' + row['comName'] + '*, ' + \
                 row['locName'] + ', on ' + pretty_dtm + '\n'
 
-        api_params = {
-            "token": SLACK_BOT_TOKEN,
-            "text": return_message
-        }
+#        api_params = {
+#            "token": SLACK_BOT_TOKEN,
+#            "text": return_message
+#        }
+#        requests.post(url=response_url, params=api_params)
 
-        requests.post(url=response_url, params=api_params)
+        # send channel a message
+        channel_msg = slack_client.api_call(
+            "chat.postMessage",
+            channel=channel_id,
+            text=return_message
+        )
+
         return
 
     if cmd == 'recent-notable':
