@@ -56,7 +56,7 @@ def command():
 
     msg_words = msg['text'].split()
 
-    region_code = msg_words[0]
+    region_code = msg_words[1]
 
     df = ebird_client.get_recent_notable_observations_for_region(region_code, days_back=3)
     print(df)
