@@ -111,13 +111,13 @@ def command():
     if cmd in RESTRICTED_COMMANDS.keys():
         if channel_name not in RESTRICTED_COMMANDS[cmd]:
             # send channel a message
-            channel_msg = slack_client.api_call(
-                "chat.postMessage",
-                channel=channel_id,
-                text='Sorry, command ' + cmd + ' is not allowed in this channel. ' +
-                     'Please try it in a direct message (e.g. with yourself).'
-            )
-            return make_response("", 200)
+#            channel_msg = slack_client.api_call(
+#                "chat.postMessage",
+#                channel=channel_id,
+#                text='Sorry, command ' + cmd + ' is not allowed in this channel. ' +
+#                     'Please try it in a direct message (e.g. with yourself).'
+#            )
+            return make_response('Sorry, command ' + cmd + ' is not allowed in this channel.', 200)
 
     if params_valid is False:
         # send channel a message
