@@ -29,7 +29,7 @@ def parse_parameters(parameter_list):
 
     else:
         valid = True
-        validation_message = 'Valid command.'
+        validation_message = 'Command received. Working on it!'
 
     return valid, validation_message, cmd, parameter_list
 
@@ -114,8 +114,9 @@ def command():
     params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
 
 # Thread stuff
+    channel_id = msg['channel_id']
     response_url = msg['response_url']
-    thread = Thread(target=handle_command, args=(cmd, cmd_parameters, response_url))
+    thread = Thread(target=handle_command, args=(cmd, cmd_parameters, channel_id, response_url))
     thread.start()
     return make_response(validation_message, 200)
 
