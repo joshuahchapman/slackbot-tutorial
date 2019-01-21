@@ -106,7 +106,7 @@ def command():
 
 # Thread stuff
     response_url = msg['response_url']
-    thread = Thread(target=handle_command, kwargs={cmd, cmd_parameters, response_url})
+    thread = Thread(target=handle_command, args=(cmd, cmd_parameters, response_url))
     thread.start()
     return make_response(validation_message, 200)
 
