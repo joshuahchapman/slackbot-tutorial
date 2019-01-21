@@ -58,8 +58,9 @@ def handle_command(cmd, cmd_params):
         for index, row in df.iterrows():
             # Format the datetime nicely for display.
             pretty_dtm = datetime.strptime(row['obsDt'], '%Y-%m-%d %H:%M').strftime(
-                '%A, %-m/%-d at %-I:%M %p')
-            return_message = return_message + '*' + row['comName'] + '* ' + pretty_dtm + '\n'
+                '%-m/%-d at %-I:%M %p')
+            return_message = return_message + '*' + row['comName'] + '*, ' + \
+                row['locName'] + ', on ' + pretty_dtm + '\n'
 
         return return_message
 
