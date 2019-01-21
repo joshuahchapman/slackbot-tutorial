@@ -117,8 +117,10 @@ def command():
     full_command = msg['text']
     params_valid, validation_message, cmd, cmd_parameters = parse_parameters(full_command.split())
 
-    if params_valid:
+    if not params_valid:
+        return make_response(validation_message, 200)
 
+    else:
         channel_id = msg['channel_id']
         channel_name = msg['channel_name']
 
@@ -132,7 +134,7 @@ def command():
         thread = Thread(target=handle_command, args=(cmd, cmd_parameters, channel_id))
         thread.start()
 
-    return make_response(validation_message, 200)
+        return make_response(validation_message, 200)
 
 
 # Start the Flask server
