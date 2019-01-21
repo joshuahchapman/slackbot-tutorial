@@ -38,6 +38,10 @@ def handle_command(cmd, cmd_params):
 
     if cmd == 'recent':
 
+        if len(cmd_params) != 2:
+            return 'Looks like you have the wrong number of inputs. ' \
+                    + 'The expected format is /slashtest recent 38.9403316 -74.9212611'
+
         lat = cmd_params[0]
         long = cmd_params[1]
 
