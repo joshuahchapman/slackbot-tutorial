@@ -129,7 +129,7 @@ def command():
         return make_response("", 200)
 
     else:
-        return_message = handle_command(cmd, cmd_parameters, channel_id)
+        return_message = handle_command(cmd, cmd_parameters)
 
         # send channel a message
         channel_msg = slack_client.api_call(
