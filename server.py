@@ -29,7 +29,7 @@ def parse_parameters(parameter_list):
     if cmd not in VALID_COMMANDS:
         valid = False
         validation_message = 'Sorry, I don''t recognize the command _' + cmd + '_. ' + \
-            'These are the commands I know: _' + '_, '.join(VALID_COMMANDS) + '_'
+            'These are the commands I know: _' + '_, _'.join(VALID_COMMANDS) + '_.'
 
     else:
         valid = True
